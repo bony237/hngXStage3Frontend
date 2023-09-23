@@ -6,6 +6,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import app from "@/services/firebase";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const schema = Yup.object({
   email: Yup.string().email("Invalid email").min(5, "Must be 5 characters or more").required("Required"),
@@ -13,18 +15,21 @@ const schema = Yup.object({
 });
 
 export default function Sign() {
-  async function handleLogin(email: string, password: string) {
-    const auth = getAuth(app);
+  const auth = getAuth(app);
+  const router = useRouter();
 
+  async function handleLogin(email: string, password: string) {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        console.log(userCredential);
-        // const user = userCredential.user;
-        // ...
+        const user = userCredential.user;
+        console.log(user);
+        toast("Connected!", { type: "success" });
+        router.push("/gallery");
       })
       .catch((error) => {
         console.error(error);
+        toast("Wrong credentials!", { type: "error" });
       });
   }
 
@@ -32,6 +37,7 @@ export default function Sign() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <ToastContainer />
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image className="mx-auto h-10 w-auto" src={icon_hngx} alt="Your Company" />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
@@ -70,11 +76,12 @@ export default function Sign() {
                 <ErrorMessage name="password" render={(errorMessage) => <div className="text-red-500">{errorMessage}</div>} />
               </div>
               <button
-                className="flex w-full disabled:opacity-20 justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                className="flex w-full disabled:opacity-20 justify-center items-center gap-2 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 disabled={isSubmitting || !isValid}
                 type="submit"
               >
-                Submit
+                {isSubmitting && <div className="h-4 w-4 border-t-2 border-white rounded-full animate-spin"></div>}
+                <span>{isSubmitting ? "loading..." : "Submit"}</span>
               </button>
             </Form>
           )}
