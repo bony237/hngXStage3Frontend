@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Suspense } from "react";
 
 export default function GalleryPage() {
+  
   return (
     <div className="flex flex-col items-center p-10 space-y-4 md:w-2/3 xl:w-1/2 w-full mx-auto">
       <Filter />
