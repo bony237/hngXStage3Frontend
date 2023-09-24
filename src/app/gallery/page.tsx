@@ -1,5 +1,5 @@
 import DropFrame from "@/components/dragAndDropSection";
-import ImagesList from "@/components/imagesList";
+import ImagesList, { imageItem } from "@/components/imagesList";
 import { getLoremImagesData } from "@/services/loremImages";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -19,15 +19,24 @@ export default function GalleryPage() {
 const ImageSection = async () => {
   const imagesData = await getLoremImagesData();
 
-  const data = imagesData.map(({ download_url: src, author: tag }) => ({ src, tag }));
+  const datas = imagesData.map(({ download_url: src, author: tag }) => ({ src, tag }));
 
   return (
     <>
-      {data.map(({ src, tag }, ind) => (
-        <div key={ind} className="col-span-1 h-48 relative overflow-hidden rounded">
-          <Image  src={src} alt={tag} fill className=" object-cover w-48 h-48 " />
-        </div>
+      {datas.map((data, ind) => (
+        <ImageDiv imageData={data} key={ind} />
       ))}
     </>
+  );
+};
+
+export const ImageDiv = ({ imageData }: { imageData: imageItem }) => {
+  return (
+    <div className="col-span-1 h-48 relative overflow-hidden rounded">
+      <Image src={imageData.src} alt={imageData.tag} fill className=" object-cover w-48 h-48 " />
+      <div className="h-10 bg-slate-900/50 w-full absolute bottom-0 flex justify-end items-center px-2">
+         <span className="bg-slate-50 rounded-full py-0 px-3 text-sm font-semibold"> # {imageData.tag} </span>
+      </div>
+    </div>
   );
 };

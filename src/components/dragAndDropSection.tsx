@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { imageItem } from "./imagesList";
 import Image from "next/image";
+import { ImageDiv } from "@/app/gallery/page";
 
 type File = { name: string; size: number; type: "image/jpeg" | "image/png" | "image/webp" };
 
@@ -83,10 +84,8 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <div className="grid grid-cols-4 gap-2 w-full  ">
-        {uploadedImages.map(({ src, tag }, ind) => (
-          <div key={ind} className="col-span-1 h-48  relative overflow-hidden rounded">
-            <Image src={src} alt={tag} fill className=" object-cover w-48 h-48 " />
-          </div>
+        {uploadedImages.map((data, ind) => (
+          <ImageDiv imageData={data} key={ind} />
         ))}
         {children}
       </div>
