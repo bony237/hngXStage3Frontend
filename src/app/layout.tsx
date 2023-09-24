@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
+import FilterProvider from "@/contexts/filterContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full bg-white">
       <body className={inter.className + " h-full bg-white"}>
+        <FilterProvider>
           <PreventDroppingFrame>{children}</PreventDroppingFrame>
+        </FilterProvider>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { imageItem } from "./imagesList";
 import Image from "next/image";
 import { ImageDiv } from "@/app/gallery/page";
+import { FilterContext } from "@/contexts/filterContext";
 
 type File = { name: string; size: number; type: "image/jpeg" | "image/png" | "image/webp" };
 
@@ -18,7 +19,7 @@ type dataTransferType = {
 //   const [dragging, setDragging] = useState(false);
 
 //   return (
-//     <div draggable onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} className={clsx("h-16 bg-gray-800 border", dragging && "bg-blue-300")}>
+//     <div draggable onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} className={clsx("h-16 bg-gray-800 border", dragging && "bg-sky-300")}>
 //       Drag me!
 //     </div>
 //   );
@@ -26,6 +27,7 @@ type dataTransferType = {
 
 const DropFrame = ({ children }: { children: React.ReactNode }) => {
   const [dropping, setDropping] = useState(false);
+  const { search, setSearchValue } = useContext(FilterContext);
 
   const [uploadedImages, setUploadedImages] = useState<imageItem[]>([]);
 
@@ -41,12 +43,14 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
   function handleDrop(e: any) {
     e.preventDefault();
     setDropping(false);
+    setSearchValue('');
     const dataTransfer: dataTransferType = e.dataTransfer;
-    const file: any = dataTransfer.files[0];
+    const file = dataTransfer.files[0];
+    console.log(file)
     if (validateTheDrop(dataTransfer.files)) {
       addImgToLibrary({
-        tag: "local",
-        src: URL.createObjectURL(file),
+        tag: file.name.split('.')[0],
+        src: URL.createObjectURL(file as any),
       });
     }
   }
@@ -75,7 +79,7 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
     <>
       <ToastContainer />
       <div
-        className={clsx("border-4 border-spacing-2 border-dashed w-full h-64 rounded-lg flex justify-center", dropping && "bg-blue-200")}
+        className={clsx("border-4 border-spacing-2 border-dashed w-full h-64 rounded-lg flex justify-center", dropping && "bg-sky-200")}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onDragEnd={handleDragOver}
@@ -84,9 +88,11 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <div className="grid grid-cols-4 gap-2 w-full  ">
-        {uploadedImages.map((data, ind) => (
-          <ImageDiv imageData={data} key={ind} />
-        ))}
+        {uploadedImages
+          .filter((data) => !Boolean(search) || data.tag.toLowerCase().includes(search.toLowerCase()))
+          ?.map((data, ind) => (
+            <ImageDiv imageData={data} key={ind} />
+          ))}
         {children}
       </div>
     </>
