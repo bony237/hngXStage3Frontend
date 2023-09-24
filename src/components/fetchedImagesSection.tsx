@@ -1,8 +1,9 @@
 "use client";
-import { ImageDiv } from "@/app/gallery/page";
+
 import { FilterContext } from "@/contexts/filterContext";
 import { getLoremImagesData } from "@/services/loremImages";
 import { useContext } from "react";
+import ImageDiv from "./imageDiv";
 
 const FetchedImagesSection = async () => {
   const { search } = useContext(FilterContext);

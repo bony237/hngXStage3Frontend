@@ -1,12 +1,11 @@
 "use client";
-import { ImageContext } from "@/archives/imageLibrary";
 import clsx from "clsx";
 import { useContext, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { imageItem } from "./imagesList";
-import Image from "next/image";
-import { ImageDiv } from "@/app/gallery/page";
+
 import { FilterContext } from "@/contexts/filterContext";
+import ImageDiv from "./imageDiv";
 
 type File = { name: string; size: number; type: "image/jpeg" | "image/png" | "image/webp" };
 
