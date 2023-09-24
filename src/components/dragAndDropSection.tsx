@@ -86,10 +86,10 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
         onDrop={handleDrop}
         onDragEnd={handleDragOver}
       >
-        <div className={clsx(dropping && "text-white", "text-center self-center text-4xl font-bold text-gray-400")}>Drag and Drop</div>
+        <div className={clsx(dropping && "text-white", "text-center self-center text-xl md:text-4xl font-bold text-gray-400")}>Drag and Drop</div>
       </div>
 
-      <div className="peer grid grid-cols-4 gap-2 w-full">
+      <div className="peer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full">
         {uploadedImagesToShow?.map((data, ind) => (
           <ImageDiv imageData={data} key={ind} />
         ))}
