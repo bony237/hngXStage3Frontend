@@ -43,13 +43,13 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
   function handleDrop(e: any) {
     e.preventDefault();
     setDropping(false);
-    setSearchValue('');
+    setSearchValue("");
     const dataTransfer: dataTransferType = e.dataTransfer;
     const file = dataTransfer.files[0];
-    console.log(file)
+    console.log(file);
     if (validateTheDrop(dataTransfer.files)) {
       addImgToLibrary({
-        tag: file.name.split('.')[0],
+        tag: file.name.split(".")[0],
         src: URL.createObjectURL(file as any),
       });
     }
@@ -75,6 +75,8 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
     return result;
   }
 
+  const uploadedImagesToShow = uploadedImages.filter((data) => !Boolean(search) || data.tag.toLowerCase().includes(search.toLowerCase()));
+
   return (
     <>
       <ToastContainer />
@@ -87,14 +89,13 @@ const DropFrame = ({ children }: { children: React.ReactNode }) => {
         <div className={clsx(dropping && "text-white", "text-center self-center text-4xl font-bold text-gray-400")}>Drag and Drop</div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 w-full  ">
-        {uploadedImages
-          .filter((data) => !Boolean(search) || data.tag.toLowerCase().includes(search.toLowerCase()))
-          ?.map((data, ind) => (
-            <ImageDiv imageData={data} key={ind} />
-          ))}
+      <div className="peer grid grid-cols-4 gap-2 w-full">
+        {uploadedImagesToShow?.map((data, ind) => (
+          <ImageDiv imageData={data} key={ind} />
+        ))}
         {children}
       </div>
+      <div className="invisible peer-empty:visible">Not found!</div>
     </>
   );
 };
